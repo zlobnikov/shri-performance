@@ -34,7 +34,7 @@
 		});
 
 		counter.send('connect', performance.timing.connectEnd - performance.timing.connectStart);
-		counter.send('ttfb', performance.timing.responseEnd - performance.timing.requestStart);
+		counter.send('ttfb', performance.timing.responseStart - performance.timing.connectEnd);
 
 		let timeStart = Date.now();
 
