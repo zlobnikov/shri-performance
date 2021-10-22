@@ -20,38 +20,55 @@ function prepareData(result) {
 }
 
 // показать значение метрики за несколько день
-function showMetricByPeriod(...) {
+function showMetricByPeriod() {
 }
 
 // показать сессию пользователя
-function showSession(...) {
+function showSession() {
 }
 
 // сравнить метрику в разных срезах
-function compareMetric(...) {
+function compareMetric() {
 }
 
 // рассчитать метрику за выбранный день
-function calcMetricByDate(data, page, name, date) {
+function addMetricByDate(data, page, name, date) {
 	let sampleData = data
 					.filter(item => item.page == page && item.name == name && item.date == date)
 					.map(item => item.value);
 
-	console.log(`${date} ${name}: ` +
-		`p25=${quantile(sampleData, 0.25)} p50=${quantile(sampleData, 0.5)} ` +
-		`p75=${quantile(sampleData, 0.75)} p90=${quantile(sampleData, 0.95)} ` +
-		`hits=${sampleData.length}`);
+	let result = {};
+
+	result.hits = sampleData.length;
+	result.p25 = quantile(sampleData, 0.25);
+	result.p50 = quantile(sampleData, 0.5);
+	result.p75 = quantile(sampleData, 0.75);
+	result.p95 = quantile(sampleData, 0.95);
+
+	return result;
 }
 
-fetch('https://shri.yandex/hw/stat/data?counterId=6A1D62E1-5DB9-4480-A661-AC766AD7D3FD')
+function calcMetricsByDate(data, page, date) {
+	console.log(`${date}:`);
+
+	let table = {};
+	table.connect = addMetricByDate(data, page, 'connect', date);
+	table.ttfb = addMetricByDate(data, page, 'ttfb', date);
+	table.load = addMetricByDate(data, page, 'load', date);
+	table.square = addMetricByDate(data, page, 'square', date);
+	table.load = addMetricByDate(data, page, 'load', date);
+	table.generate = addMetricByDate(data, page, 'generate', date);
+	table.draw = addMetricByDate(data, page, 'draw', date);
+
+	console.table(table);
+};
+
+fetch('https://shri.yandex/hw/stat/data?counterId=D8F28E50-3339-11EC-9EDF-9F93090795B1')
 	.then(res => res.json())
 	.then(result => {
 		let data = prepareData(result);
 
-		calcMetricByDate(data, 'send test', 'connect', '2021-07-03');
-		calcMetricByDate(data, 'send test', 'ttfb', '2021-07-03');
-		calcMetricByDate(data, 'send test', 'load', '2021-07-03');
-
+		calcMetricsByDate(data, 'send test', '2021-10-22')
 		// добавить свои сценарии, реализовать функции выше
 		// ...
 	});
