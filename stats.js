@@ -19,6 +19,7 @@ function prepareData(result) {
 	});
 }
 
+// TODO: реализовать
 // показать значение метрики за несколько день
 function showMetricByPeriod() {
 }
@@ -31,7 +32,11 @@ function showSession() {
 function compareMetric() {
 }
 
-// рассчитать метрику за выбранный день
+// любые другие сценарии, которые считаете полезными
+
+
+// Пример
+// добавить метрику за выбранный день
 function addMetricByDate(data, page, name, date) {
 	let sampleData = data
 					.filter(item => item.page == page && item.name == name && item.date == date)
@@ -47,9 +52,9 @@ function addMetricByDate(data, page, name, date) {
 
 	return result;
 }
-
+// рассчитывает все метрики за день
 function calcMetricsByDate(data, page, date) {
-	console.log(`${date}:`);
+	console.log(`All metrics for ${date}:`);
 
 	let table = {};
 	table.connect = addMetricByDate(data, page, 'connect', date);
@@ -68,7 +73,7 @@ fetch('https://shri.yandex/hw/stat/data?counterId=D8F28E50-3339-11EC-9EDF-9F9309
 	.then(result => {
 		let data = prepareData(result);
 
-		calcMetricsByDate(data, 'send test', '2021-10-22')
+		calcMetricsByDate(data, 'send test', '2021-10-22');
+
 		// добавить свои сценарии, реализовать функции выше
-		// ...
 	});
