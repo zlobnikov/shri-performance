@@ -75,14 +75,28 @@
   <script>
     const counter = new Counter();
 
-    counter.init('D8F28E50-0001-11EC-9EDF-9U93090795C1', String(Math.random()).substr(2, 12), 'send test');
+    counter.init('9b2714be-bf3c-4a10-96bb-1ddaf1f09399', String(Math.random()).substr(2, 12), 'clock');
     counter.setAdditionalParams({
-      env: 'production',
-      platform: 'touch'
+      platform: navigator.userAgentData.mobile ? 'touch' : 'desktop',
+      browser: navigator.userAgent.indexOf('Chrome') !== 1 ? 'chrome' : 'other',
+      random: parseInt(Math.random() * 10) % 2 ? 'odd' : 'even',
     });
 
     counter.send('connect', performance.timing.connectEnd - performance.timing.connectStart);
     counter.send('ttfb', performance.timing.responseEnd - performance.timing.requestStart);
+
+    new PerformanceObserver((entryList) => {
+      for (const entry of entryList.getEntriesByName('first-contentful-paint')) {
+        counter.send('fcp', entry.startTime);
+      }
+    }).observe({type: 'paint', buffered: true});
+
+    new PerformanceObserver((entryList) => {
+      for (const entry of entryList.getEntries()) {
+        counter.send('lcp', entry.startTime);
+      }
+    }).observe({type: 'largest-contentful-paint', buffered: true});
+
   </script>
 </body>
 </html>

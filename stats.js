@@ -59,21 +59,18 @@ function calcMetricsByDate(data, page, date) {
 	let table = {};
 	table.connect = addMetricByDate(data, page, 'connect', date);
 	table.ttfb = addMetricByDate(data, page, 'ttfb', date);
-	table.load = addMetricByDate(data, page, 'load', date);
-	table.square = addMetricByDate(data, page, 'square', date);
-	table.load = addMetricByDate(data, page, 'load', date);
-	table.generate = addMetricByDate(data, page, 'generate', date);
-	table.draw = addMetricByDate(data, page, 'draw', date);
+	table.fcp = addMetricByDate(data, page, 'fcp', date);
+	table.lcp = addMetricByDate(data, page, 'lcp', date);
 
 	console.table(table);
 };
 
-fetch('https://shri.yandex/hw/stat/data?counterId=D8F28E50-0001-11EC-9EDF-9U93090795C1')
+fetch('https://shri.yandex/hw/stat/data?counterId=9b2714be-bf3c-4a10-96bb-1ddaf1f09399')
 	.then(res => res.json())
 	.then(result => {
 		let data = prepareData(result);
 
-		calcMetricsByDate(data, 'send test', '2021-10-22');
+		calcMetricsByDate(data, 'clock', '2021-10-31');
 
 		// добавить свои сценарии, реализовать функции выше
 	});
