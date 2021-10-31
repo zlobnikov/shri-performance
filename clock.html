@@ -79,7 +79,7 @@
     counter.setAdditionalParams({
       platform: navigator.userAgentData.mobile ? 'touch' : 'desktop',
       browser: navigator.userAgent.indexOf('Chrome') !== 1 ? 'chrome' : 'other',
-      random: parseInt(Math.random() * 10) % 2 ? 'odd' : 'even',
+      experiment: parseInt(Math.random() * 10) % 3 ? 'experiment #1' : 'experiment #2',
     });
 
     counter.send('connect', performance.timing.connectEnd - performance.timing.connectStart);
