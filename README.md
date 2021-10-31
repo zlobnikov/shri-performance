@@ -1,3 +1,10 @@
+# Решение
+- Метрики собираются здесь:
+https://github.com/zlobnikov/shri-performance/blob/master/clock.html
+
+- Информация по сценариям анализа данных в консоли здесь:
+https://zlobnikov.github.io/shri-performance/stats.html
+
 # Счетчик скорости
 - Счетчик реализован в файле send.js, его модифицировать не нужно
 - Пример работы со счетчиком показан в send.html
