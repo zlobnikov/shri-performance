@@ -68,7 +68,7 @@ function calcMetricsByDate(data, page, date) {
 	console.table(table);
 };
 
-fetch('https://shri.yandex/hw/stat/data?counterId=CLOCK000-1111-PRST-3333-000000000001')
+fetch('https://shri.yandex/hw/stat/data?counterId=D8F28E50-0001-11EC-9EDF-9U93090795C1')
 	.then(res => res.json())
 	.then(result => {
 		let data = prepareData(result);
