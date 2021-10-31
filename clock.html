@@ -68,9 +68,9 @@
   </div>
 
   <button class="switch">switch theme</button>
+
   <script src="script.js"></script>
 
-  
   <script src="../send.js"></script>
   <script>
     const counter = new Counter();
@@ -96,6 +96,52 @@
         counter.send('lcp', entry.startTime);
       }
     }).observe({type: 'largest-contentful-paint', buffered: true});
+
+    new PerformanceObserver((entryList) => {
+      for (const entry of entryList.getEntries()) {
+        const delay = entry.processingStart - entry.startTime;
+        counter.send('fid', delay);
+      }
+    }).observe({type: 'first-input', buffered: true});
+
+    let clsValue = 0;
+    let clsEntries = [];
+
+    let sessionValue = 0;
+    let sessionEntries = [];
+
+    new PerformanceObserver((entryList) => {
+      for (const entry of entryList.getEntries()) {
+        // Only count layout shifts without recent user input.
+        if (!entry.hadRecentInput) {
+          const firstSessionEntry = sessionEntries[0];
+          const lastSessionEntry = sessionEntries[sessionEntries.length - 1];
+
+          // If the entry occurred less than 1 second after the previous entry and
+          // less than 5 seconds after the first entry in the session, include the
+          // entry in the current session. Otherwise, start a new session.
+          if (sessionValue &&
+              entry.startTime - lastSessionEntry.startTime < 1000 &&
+              entry.startTime - firstSessionEntry.startTime < 5000) {
+            sessionValue += entry.value;
+            sessionEntries.push(entry);
+          } else {
+            sessionValue = entry.value;
+            sessionEntries = [entry];
+          }
+
+          // If the current session value is larger than the current CLS value,
+          // update CLS and the entries contributing to it.
+          if (sessionValue > clsValue) {
+            clsValue = sessionValue;
+            clsEntries = sessionEntries;
+
+            // Log the updated value (and its entries) to the console.
+            counter.send('cls', clsValue);
+          }
+        }
+      }
+    }).observe({type: 'layout-shift', buffered: true});
 
   </script>
 </body>
